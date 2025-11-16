@@ -1,0 +1,120 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @id @default(uuid())
+  username String
+  email    String @unique
+  password String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  clients       Client[]
+  invoices      Invoice[]
+  notifications Notification[]
+}
+
+model Client {
+  id      String @id @default(uuid())
+  name    String
+  email   String @unique
+  phone   String
+  address Json
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   String
+  invoices Invoice[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([userId])
+}
+
+model Invoice {
+  id            String        @id @default(uuid())
+  invoiceNumber String        @unique
+  status        InvoiceStatus @default(draft)
+  title         String
+  notes         String?
+  totalAmount   Float         @default(0)
+  subTotal      Float         @default(0)
+  taxRate       Int           @default(0)
+  discountRate  Int           @default(0)
+  currency      String
+
+  paymentStatus PaymentStatus @default(unpaid)
+  paymentMethod PaymentMethod @default(bank)
+
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   String
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  clientId String
+
+  issueDate    DateTime
+  dueDate      DateTime
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now()) @updatedAt
+  invoiceItems InvoiceItem[]
+}
+
+model InvoiceItem {
+  id          String  @id @default(uuid())
+  title       String
+  description String?
+  quantity    Int
+  price       Decimal
+  total       Decimal
+
+  invoice   Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  invoiceId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model Notification {
+  id      String           @id @default(uuid())
+  title   String
+  message String
+  read    Boolean          @default(false)
+  type    NotificationType @default(success)
+  user    User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  String
+
+  createdAt DateTime @default(now())
+}
+
+enum InvoiceStatus {
+  draft
+  sent
+  paid
+  overdue
+  cancelled
+}
+
+enum NotificationType {
+  success
+  warning
+  error
+}
+
+enum PaymentStatus {
+  unpaid
+  partiallyPaid
+  paid
+}
+
+enum PaymentMethod {
+  cash
+  bank
+  chapa
+}
