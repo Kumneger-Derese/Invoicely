@@ -8,10 +8,10 @@ import {
   errorHandler,
   notFound
 } from './middleware/errorHandler.js'
-import clientRouter from './routes/clientRoute.js'
+import { clientRouter } from './routes/clientRoute.js'
 import { invoiceRouter } from './routes/invoiceRoute.js'
-import { invoiceItemRouter } from './routes/invoiceItemRouter.js'
-import { notificationRouter } from './routes/notificationRouter.js'
+import { invoiceItemRouter } from './routes/invoiceItemRoute.js'
+import { notificationRouter } from './routes/notificationRoute.js'
 
 await connectDb()
 

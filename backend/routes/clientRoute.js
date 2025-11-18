@@ -27,4 +27,4 @@ clientRouter.put(
 )
 clientRouter.delete('/delete/:clientId', deleteClient)
 
-export default clientRouter
+export { clientRouter }
