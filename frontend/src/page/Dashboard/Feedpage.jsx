@@ -1,4 +1,8 @@
-const Feedpage = () => {
-  return <div>Feedpage</div>
+
+const FeedPage = () => {
+  return (
+    <div>FeedPage</div>
+  )
 }
-export default Feedpage
+
+export default FeedPage

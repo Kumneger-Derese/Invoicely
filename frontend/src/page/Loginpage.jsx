@@ -1,15 +1,29 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useLoginUser } from '../hooks/useUserApi'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from "../store/useAuthStore.js";
 
-export default function Loginpage () {
+export default function LoginPage() {
   const [userData, setUserData] = useState({
     email: '',
     password: ''
   })
 
+  const { userInfo } = useAuth()
+
   const loginMutation = useLoginUser()
   const navigate = useNavigate()
+
+  // Check user navigation
+  useEffect(() => {
+    if (userInfo) {
+      navigate('/invoices')
+    } else {
+      navigate('/login')
+    }
+
+  }, [userInfo, navigate])
+
 
   // Handle form submission
   const handleSubmit = e => {
@@ -25,21 +39,18 @@ export default function Loginpage () {
         navigate('/invoices')
       }
     })
-  }
-
-  const handleChange = e => {
-    const { name, value } = e.target
-
-    setUserData(prev => ({
-      ...prev,
-      [name]: value
-    }))
 
     // Reset form
     setUserData({
       email: '',
       password: ''
     })
+  }
+
+  const handleChange = e => {
+    const { name, value } = e.target
+
+    setUserData(prev => ({ ...prev, [name]: value }))
   }
 
   return (
@@ -79,6 +90,16 @@ export default function Loginpage () {
           <button className='py-2.5 rounded-xl font-semibold w-fit px-8 mt-4 bg-lime-600 hover:bg-lime-800'>
             Sign in
           </button>
+
+          <div className='flex gap-x-2 text-sm font-semibold'>
+            <p>Don't have Account</p>
+            <Link
+              to={'/register'}
+              className='text-blue-400 font-semibold'
+            >
+              Sign up
+            </Link>
+          </div>
         </form>
       </div>
 

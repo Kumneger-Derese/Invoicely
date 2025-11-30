@@ -1,16 +1,27 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRegisterUser } from '../hooks/useUserApi'
 import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../store/useAuthStore'
 
-export default function RegisterPage () {
+export default function RegisterPage() {
   const [userData, setUserData] = useState({
     username: '',
     email: '',
     password: ''
   })
-
+  const { userInfo } = useAuth()
   const registerMutation = useRegisterUser()
   const navigate = useNavigate()
+
+  // Check user navigation
+  useEffect(() => {
+    if (userInfo) {
+      navigate('/invoices')
+    } else {
+      navigate('/login')
+    }
+
+  }, [userInfo, navigate])
 
   // Handle form submission
   const handleSubmit = e => {
@@ -27,6 +38,13 @@ export default function RegisterPage () {
         navigate('/invoices')
       }
     })
+
+    // Reset form
+    setUserData({
+      email: '',
+      password: '',
+      username: ''
+    })
   }
 
   const handleChange = e => {
@@ -36,13 +54,6 @@ export default function RegisterPage () {
       ...prev,
       [name]: value
     }))
-
-    // Reset form
-    setUserData({
-      email: '',
-      password: '',
-      username: ''
-    })
   }
 
   return (
@@ -68,7 +79,7 @@ export default function RegisterPage () {
             />
           </div>
 
-          {/* Username */}
+          {/* Email */}
           <div className='flex flex-col gap-y-1'>
             <label htmlFor='email'>Email</label>
             <input
@@ -83,7 +94,7 @@ export default function RegisterPage () {
             />
           </div>
 
-          {/* Username */}
+          {/* Password */}
           <div className='flex flex-col gap-y-1'>
             <label htmlFor='password'>Password</label>
             <input

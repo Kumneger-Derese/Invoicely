@@ -1,4 +1,8 @@
-const Recentpage = () => {
-  return <div>Recentpage</div>
+
+const RecentPage = () => {
+  return (
+    <div>RecentPage</div>
+  )
 }
-export default Recentpage
+
+export default RecentPage
