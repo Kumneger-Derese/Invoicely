@@ -3,6 +3,7 @@ import {
   createClient,
   deleteClient,
   getClient,
+  getClients,
   updateClient,
 } from "../api/clientApi";
 import toast from "react-hot-toast";
@@ -17,11 +18,10 @@ const useGetClient = (clientId) => {
 };
 
 //* hook to get all users
-const useGetClients = (clientId) => {
+const useGetClients = () => {
   return useQuery({
     queryKey: ["clients"],
-    queryFn: () => getClient(clientId),
-    enabled: !!clientId,
+    queryFn: () => getClients(),
   });
 };
 

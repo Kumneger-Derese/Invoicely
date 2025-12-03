@@ -1,6 +1,15 @@
 @import 'tailwindcss';
 
+@font-face {
+  font-family: Poppins;
+  src: url('./assets//fonts/poppins.ttf');
+}
+
+@theme {
+  --font-poppins : Poppins
+}
+
 body,
 html {
-  @apply bg-neutral-800 text-neutral-50;
+  @apply bg-neutral-800 text-neutral-50 font-poppins;
 }

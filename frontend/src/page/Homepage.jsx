@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 
-const Homepage = () => {
+const HomePage = () => {
   return (
     <div className='container mx-auto p-4'>
       <h1> Hello, World!</h1>
@@ -10,4 +10,4 @@ const Homepage = () => {
     </div>
   )
 }
-export default Homepage
+export default HomePage
