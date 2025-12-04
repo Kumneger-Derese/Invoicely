@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom"
 import { useDeleteClient, useGetClients } from "../hooks/useClientApi"
+import { HiOutlinePlusCircle, HiPlus, HiPlusCircle } from 'react-icons/hi2'
 
 const ClientList = () => {
     const { data: clientData } = useGetClients()
@@ -12,7 +13,9 @@ const ClientList = () => {
         <div className="p-8">
             <div className="flex justify-between px-4 mb-4">
                 <h1 className="text-2xl font-bold text-lime-500">Client List</h1>
-                <button>+</button>
+                <Link to={'/create-client'} className="text-neutral-300" title="Create Client">
+                    <HiOutlinePlusCircle size={28} />
+                </Link>
             </div>            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {
                     clientData?.map((client) => (

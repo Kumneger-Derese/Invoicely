@@ -55,9 +55,9 @@ const CreateClient = () => {
                 <h1 className="text-lime-400 text-2xl mt-8 font-bold text-center">Create Client</h1>
             </div>
 
-            <form onSubmit={handleSubmit} className="flex gap-8 px-12 w-full">
+            <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-8 px-12 w-full">
                 {/*Left Section */}
-                <div className="flex flex-col gap-4 w-1/2">
+                <div className="flex flex-col gap-4 w-full md:w-1/2">
                     {/* Name Field */}
                     <div className="flex flex-col w-full gap-1">
                         <label htmlFor="name" className="text-neutral-300 font-semibold">Client Name</label>
@@ -101,7 +101,7 @@ const CreateClient = () => {
                 </div>
 
                 {/*Right Section */}
-                <div className="w-1/2 flex flex-col gap-4">
+                <div className="w-full md:w-1/2 flex flex-col gap-4">
                     <div className="flex flex-col w-full gap-1">
                         <label htmlFor="country" className="text-neutral-300 font-semibold">Country</label>
                         <input

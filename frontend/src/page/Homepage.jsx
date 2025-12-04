@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom'
+import Navbar from '../components/Navbar'
 
 const HomePage = () => {
   return (
-    <div className='container mx-auto p-4'>
-      <h1> Hello, World!</h1>
-      <Link to='/register' className='text-blue-500 underline'>
-        Go to Register Page
+    <div className='p-4'>
+      <Navbar />
+
+      <Link to='/register' className=''>
+        Welcome to invoicely
       </Link>
     </div>
   )
