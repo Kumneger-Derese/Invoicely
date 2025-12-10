@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import { useDeleteClient, useGetClients } from "../hooks/useClientApi"
-import { HiOutlinePlusCircle, HiPlus, HiPlusCircle } from 'react-icons/hi2'
+import { HiOutlinePlusCircle } from 'react-icons/hi2'
 
 const ClientList = () => {
     const { data: clientData } = useGetClients()

@@ -3,6 +3,7 @@ import {
   createInvoice,
   deleteInvoice,
   getInvoice,
+  getInvoices,
   updateInvoice,
 } from "../api/invoiceApi";
 import toast from "react-hot-toast";
@@ -17,11 +18,10 @@ const useGetInvoice = (invoiceId) => {
 };
 
 //get invoices
-const useGetInvoices = (clientId) => {
+const useGetInvoices = () => {
   return useQuery({
-    queryKey: ["invoices", clientId],
-    queryFn: () => getInvoice(clientId),
-    enabled: !!clientId,
+    queryKey: ["invoices"],
+    queryFn: getInvoices,
   });
 };
 
@@ -33,6 +33,7 @@ const useCreateInvoice = () => {
     mutationFn: createInvoice,
     onSuccess: (data, variables) => {
       const { clientId } = variables;
+      queryClient.invalidateQueries({ queryKey: ["invoices"] });
       queryClient.invalidateQueries({ queryKey: ["invoices", clientId] });
       toast.success(data.message);
     },

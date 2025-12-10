@@ -18,6 +18,8 @@ import ClientList from '../client/ClientList.jsx'
 import CreateClient from '../client/CreateClient.jsx'
 import EditInvoice from '../invoice/EditInvoice.jsx'
 import EditClient from '../client/EditClient.jsx'
+import NotFound from '../page/NotFoundPage.jsx'
+import NotificationPage from '../page/NotificationPage.jsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -29,13 +31,15 @@ const router = createBrowserRouter(
       <Route path='' element={<ProtectedRoute />}>
         <Route path='profile' element={<ProfilePage />} />
 
+        <Route path='notifications' element={<NotificationPage />} />
+
         <Route path='clients' element={<ClientList />} />
         <Route path='create-client' element={<CreateClient />} />
         <Route path='edit-client/:clientId' element={<EditClient />} />
 
         <Route path='invoices' element={<InvoiceList />} />
         <Route path='create-invoice' element={<CreateInvoice />} />
-        <Route path='edit-invoice' element={<EditInvoice />} />
+        <Route path='edit-invoice/:invoiceId' element={<EditInvoice />} />
 
         <Route path='/dashboard' element={<Layout />}>
           <Route path='' index element={<FeedPage />} />
@@ -43,6 +47,7 @@ const router = createBrowserRouter(
         </Route>
       </Route>
 
+      <Route path='*' element={<NotFound />} />
     </Route>
   )
 )
