@@ -3,15 +3,25 @@ import {
   deleteNotification,
   deleteNotifications,
   getNotifications,
+  getNotificationsCount,
   readNotification,
   readNotifications,
 } from "../api/notificationApi";
 import toast from "react-hot-toast";
 
+// get all notifications
 const useGetNotifications = () => {
   return useQuery({
     queryKey: ["notifications"],
     queryFn: getNotifications,
+  });
+};
+
+// get notification count
+const useGetNotificationsCount = () => {
+  return useQuery({
+    queryKey: ["notifications"],
+    queryFn: getNotificationsCount,
   });
 };
 
@@ -36,7 +46,7 @@ const useReadNotification = (notificationId) => {
   });
 };
 
-//read single all notification
+//read  all notification
 const useReadNotifications = () => {
   const queryClient = useQueryClient();
 
@@ -75,7 +85,7 @@ const useDeleteNotification = (notificationId) => {
   });
 };
 
-//read delete single all notification
+//read delete all notification
 const useDeleteNotifications = () => {
   const queryClient = useQueryClient();
 
@@ -99,4 +109,5 @@ export {
   useReadNotifications,
   useDeleteNotification,
   useDeleteNotifications,
+  useGetNotificationsCount,
 };

@@ -1,5 +1,10 @@
 import axiosInstance from "../utils/axiosInstance";
 
+const getNotificationsCount = async () => {
+  const { data } = await axiosInstance.get("/notifications/count");
+  return data;
+};
+
 const getNotifications = async () => {
   const { data } = await axiosInstance.get("/notifications");
   return data;
@@ -34,4 +39,5 @@ export {
   readNotifications,
   deleteNotification,
   deleteNotifications,
+  getNotificationsCount,
 };

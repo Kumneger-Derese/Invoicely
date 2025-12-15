@@ -1,13 +1,21 @@
 import { Link } from "react-router-dom"
-import { useDeleteInvoice, useGetInvoices } from "../hooks/useInvoiceApi"
+import Loading from "../components/Loading"
 import { HiOutlineBell, HiOutlinePlusCircle } from 'react-icons/hi2'
+import { useGetNotificationsCount } from "../hooks/useNotificationApi"
+import { useDeleteInvoice, useGetInvoices } from "../hooks/useInvoiceApi"
 
 const InvoiceList = () => {
-  const { data: invoiceData } = useGetInvoices()
+  const { data: invoiceData, isLoading } = useGetInvoices()
+  const { data: notificationCount } = useGetNotificationsCount()
   const deleteInvoiceMutation = useDeleteInvoice()
+
 
   const handleInvoiceDelete = (id) => {
     deleteInvoiceMutation.mutate(id)
+  }
+
+  if (isLoading) {
+    return <Loading />
   }
 
   return (
@@ -16,8 +24,9 @@ const InvoiceList = () => {
         <h1 className="text-2xl font-bold text-lime-500">InvoiceList</h1>
 
         <div className="flex gap-x-4 items-center">
-          <Link to={'/notifications'} className="text-neutral-300" title="Notification">
+          <Link to={'/notifications'} className="text-neutral-300 relative hover:text-lime-500" title="Notification">
             <HiOutlineBell size={28} />
+            <span className="absolute -top-2 -right-2 text-sm font-bold py-.5 px-2 rounded-full bg-white text-neutral-900">{notificationCount}</span>
           </Link>
 
           <Link to={'/create-invoice'} className="text-neutral-300" title="Create Client">

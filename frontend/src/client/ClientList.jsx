@@ -1,14 +1,20 @@
 import { Link } from "react-router-dom"
 import { useDeleteClient, useGetClients } from "../hooks/useClientApi"
 import { HiOutlinePlusCircle } from 'react-icons/hi2'
+import Loading from "../components/Loading"
 
 const ClientList = () => {
-    const { data: clientData } = useGetClients()
+    const { data: clientData, isLoading } = useGetClients()
     const deleteClientMutation = useDeleteClient()
 
     const handleClientDelete = (id) => {
         deleteClientMutation.mutate(id)
     }
+
+    if (isLoading) {
+        return <Loading />
+    }
+
     return (
         <div className="p-8">
             <div className="flex justify-between px-4 mb-4">
