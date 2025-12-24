@@ -59,20 +59,37 @@ model Invoice {
   client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
   clientId String
 
-  issueDate    DateTime
-  dueDate      DateTime
+  issueDate DateTime
+  dueDate   DateTime
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @default(now()) @updatedAt
+  items     InvoiceItem[]
+}
+
+model Product {
+  id String @id @default(uuid())
+
+  title       String
+  description String?
+  price       Decimal
+
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @default(now()) @updatedAt
   invoiceItems InvoiceItem[]
 }
 
+//snapshot + reference 
 model InvoiceItem {
-  id          String  @id @default(uuid())
-  title       String
+  id String @id @default(uuid())
+
+  product   Product? @relation(fields: [productId], references: [id])
+  productId String?
+
+  title       String //snapshot
   description String?
+  price       Float
   quantity    Int
-  price       Decimal
-  total       Decimal
+  total       Float
 
   invoice   Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
   invoiceId String

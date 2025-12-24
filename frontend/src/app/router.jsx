@@ -20,6 +20,9 @@ import EditInvoice from '../invoice/EditInvoice.jsx'
 import EditClient from '../client/EditClient.jsx'
 import NotFound from '../page/NotFoundPage.jsx'
 import NotificationPage from '../page/NotificationPage.jsx'
+import ProductList from '../product/ProductList.jsx'
+import CreateProduct from '../product/CreateProduct.jsx'
+import EditProduct from '../product/EditProduct.jsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -28,19 +31,27 @@ const router = createBrowserRouter(
       <Route path='register' element={<RegisterPage />} />
       <Route path='login' element={<LoginPage />} />
 
+      {/* Protected Route */}
       <Route path='' element={<ProtectedRoute />}>
         <Route path='profile' element={<ProfilePage />} />
-
         <Route path='notifications' element={<NotificationPage />} />
 
+        {/* Clients */}
         <Route path='clients' element={<ClientList />} />
         <Route path='create-client' element={<CreateClient />} />
         <Route path='edit-client/:clientId' element={<EditClient />} />
 
+        {/* Invoices */}
         <Route path='invoices' element={<InvoiceList />} />
         <Route path='create-invoice' element={<CreateInvoice />} />
         <Route path='edit-invoice/:invoiceId' element={<EditInvoice />} />
 
+        {/* Products */}
+        <Route path='products' element={<ProductList />} />
+        <Route path='create-product' element={<CreateProduct />} />
+        <Route path='edit-product/:productId' element={<EditProduct />} />
+
+        {/* Dashboard */}
         <Route path='/dashboard' element={<Layout />}>
           <Route path='' index element={<FeedPage />} />
           <Route path='recent' index element={<RecentPage />} />

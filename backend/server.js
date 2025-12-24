@@ -10,7 +10,7 @@ import {
 } from "./middleware/errorHandler.js";
 import { clientRouter } from "./routes/clientRoute.js";
 import { invoiceRouter } from "./routes/invoiceRoute.js";
-import { invoiceItemRouter } from "./routes/invoiceItemRoute.js";
+import { productRouter } from "./routes/productRoute.js";
 import { notificationRouter } from "./routes/notificationRoute.js";
 
 await connectDb();
@@ -27,7 +27,7 @@ app.use(express.json());
 app.use("/api/users", userRouter);
 app.use("/api/clients", clientRouter);
 app.use("/api/invoices", invoiceRouter);
-app.use("/api/items", invoiceItemRouter);
+app.use("/api/products", productRouter);
 app.use("/api/notifications", notificationRouter);
 
 // error middleware

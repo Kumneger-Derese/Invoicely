@@ -11,7 +11,7 @@ const Navbar = () => {
             {userInfo &&
                 <div className='flex gap-3 px-4 items-center text-neutral-300'>
                     <Link to={'/invoices'}>Invoices</Link>
-                    <Link to={'/items'}>Items</Link>
+                    <Link to={'/products'}>Products</Link>
                     <Link to={'/clients'}>Clients</Link>
                     <Link to={'/profile'}>Profile</Link>
                     <Link to={'/settings'}>Settings</Link>
