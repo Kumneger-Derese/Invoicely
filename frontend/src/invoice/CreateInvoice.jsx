@@ -39,8 +39,9 @@ const CreateInvoice = () => {
             clientId,
             body: { ...data, issueDate: isoIssueDate, dueDate: isoDueDate }
         }, {
-            onSuccess: () => {
-                navigate('/invoices', { replace: true })
+            onSuccess: ({invoice}) => {
+                console.log({data})
+                navigate(`/invoice-detail/${invoice.id}`, { replace: true })
             }
         })
     }

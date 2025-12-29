@@ -23,6 +23,7 @@ import NotificationPage from '../page/NotificationPage.jsx'
 import ProductList from '../product/ProductList.jsx'
 import CreateProduct from '../product/CreateProduct.jsx'
 import EditProduct from '../product/EditProduct.jsx'
+import InvoiceDetail from "../invoice/InvoiceDetail.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -45,6 +46,7 @@ const router = createBrowserRouter(
         <Route path='invoices' element={<InvoiceList />} />
         <Route path='create-invoice' element={<CreateInvoice />} />
         <Route path='edit-invoice/:invoiceId' element={<EditInvoice />} />
+        <Route path='invoice-detail/:invoiceId' element={<InvoiceDetail />} />
 
         {/* Products */}
         <Route path='products' element={<ProductList />} />

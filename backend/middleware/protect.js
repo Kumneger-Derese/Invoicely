@@ -17,10 +17,10 @@ const protect = asyncHandler(async (req, res, next) => {
 
       next()
     } catch (error) {
-      return next(new ApiError('Not authorized token feild.'))
+      return next(new ApiError('Not authorized token field.',401))
     }
   } else {
-    return next(new ApiError('Not authorized no token.'))
+    return next(new ApiError('Not authorized no token.',401,))
   }
 })
 

@@ -8,6 +8,7 @@ import {
   errorHandler,
   notFound,
 } from "./middleware/errorHandler.js";
+import {itemsRouter} from "./routes/itemRoute.js";
 import { clientRouter } from "./routes/clientRoute.js";
 import { invoiceRouter } from "./routes/invoiceRoute.js";
 import { productRouter } from "./routes/productRoute.js";
@@ -28,6 +29,7 @@ app.use("/api/users", userRouter);
 app.use("/api/clients", clientRouter);
 app.use("/api/invoices", invoiceRouter);
 app.use("/api/products", productRouter);
+app.use("/api/items", itemsRouter);
 app.use("/api/notifications", notificationRouter);
 
 // error middleware
