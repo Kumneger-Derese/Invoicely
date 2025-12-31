@@ -29,19 +29,48 @@ const getItems = asyncHandler(async (req, res, next) => {
 
 // create invoice item
 const createItem = asyncHandler(async (req, res, next) => {
-    const {invoiceId} = req.params;
-    // const {invoiceId,productId} = req.params;
+    let item;
+    const {invoiceId, productId} = req.params;
+    const {title, description, price, quantity} = req.body
 
-    const item = await prisma.invoiceItem.create({
-        data: {
-            invoiceId,
-            title: 'Invoice Item Title',
-            description: 'Invoice Description',
-            price: 1000,
-            quantity: 100,
-            total: 1000 * 100
-        }
+    const invoice = await prisma.invoice.findUnique({
+        where: {id: invoiceId}
     })
+
+    if (!invoice) return next(new ApiError("Invoice to create item on to not found", 404));
+
+    if (productId) {
+        // if productId is provided
+        const product = await prisma.product.findUnique({
+            where: {id: productId}
+        })
+
+        item = await prisma.invoiceItem.create({
+            data: {
+                invoiceId,
+                productId,
+                title: product.title,
+                description: product.description,
+                price: product.price,
+                quantity,
+                total: price * quantity
+            }
+        })
+    } else {
+        // if productId is not provided
+        item = await prisma.invoiceItem.create({
+            data: {
+                invoiceId,
+                productId: null,
+                title,
+                description,
+                price,
+                quantity,
+                total: price * quantity
+            }
+        })
+
+    }
 
     res.status(201).json({
         message: 'Item created',

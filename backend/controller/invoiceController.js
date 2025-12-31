@@ -12,6 +12,16 @@ const getInvoice = asyncHandler(async (req, res, next) => {
     const invoice = await prisma.invoice.findUnique({
         where: {id: invoiceId, userId: userId},
         include: {
+            user: {
+                select: {
+                    username: true, email: true,
+                }
+            },
+            client: {
+                select: {
+                    name: true, email: true, phone: true, address: true,
+                }
+            },
             items: {
                 omit: {createdAt: true, updatedAt: true},
             },
