@@ -11,10 +11,8 @@ const getInvoices = async () => {
 };
 
 const createInvoice = async ({ clientId, body }) => {
-  const { data } = await axiosInstance.post(
-    `/invoices/create/${clientId}`,
-    body
-  );
+  const { data } =
+    await axiosInstance.post(`/invoices/create/${clientId}`, body);
   return data;
 };
 

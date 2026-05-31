@@ -10,6 +10,7 @@ const useAuthStore = create((set) => {
       localStorage.setItem("userInfo", JSON.stringify(data));
       set({ userInfo: data });
     },
+
     logout: () => {
       localStorage.removeItem("userInfo");
       set({ userInfo: null });
@@ -17,6 +18,7 @@ const useAuthStore = create((set) => {
   };
 });
 
+// Reusable hook
 export const useAuth = () => {
   const { userInfo, setCredential, logout } = useAuthStore();
 

@@ -1,49 +1,163 @@
-import {HiOutlinePlusCircle} from "react-icons/hi2"
-import {Link} from "react-router-dom"
-import {useDeleteProduct, useGetProducts} from "../hooks/useProductApi.js";
+import {
+  HiMagnifyingGlass,
+  HiMagnifyingGlassCircle,
+  HiOutlineCurrencyDollar,
+  HiOutlinePlusCircle,
+} from "react-icons/hi2";
+import { Link } from "react-router-dom";
+import { useDeleteProduct, useGetProducts } from "../hooks/useProductApi.js";
 import Loading from "../components/Loading.jsx";
+import Navbar from "../components/Navbar.jsx";
+import { useState } from "react";
+import Modal from "../components/Modal.jsx";
+import EmptySection from "../components/EmptySection.jsx";
+import SearchAnyThing from "../components/SearchAnyThing.jsx";
 
 const ProductList = () => {
-    const {data: products, isLoading} = useGetProducts()
+  const [selectedId, setSelectedId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isProductDeleteModalOpen, setIsProductDeleteModalOpen] =
+    useState(false);
 
-    const deleteProductMutation = useDeleteProduct()
+  const { data: products, isLoading } = useGetProducts();
 
-    const handleDeleteProduct = (id) => {
-        deleteProductMutation.mutate(id)
-    }
+  const deleteProductMutation = useDeleteProduct();
 
-    if (isLoading) {
-        return <Loading />
-    }
+  const handleDeleteProduct = (id) => {
+    deleteProductMutation.mutate(id, {
+      onSuccess: () => {
+        setIsProductDeleteModalOpen(false);
+      },
+    });
+  };
 
-    return (
-        <div className="p-8 flex flex-col gap-2">
-            <div className="flex justify-between item-center mb-4">
-                <h1 className={'text-lime-400 font-bold'}>Products</h1>
-                <Link to={'/create-product'} className={'hover:text-lime-400 '}>
-                    <HiOutlinePlusCircle size={24}/>
-                </Link>
+  const handleOpenProductDeleteModal = (id) => {
+    setSelectedId(id);
+    setIsProductDeleteModalOpen(true);
+  };
+
+  const handleSearch = () => {
+    setSearchTerm("");
+  };
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  return (
+    <div className="p-8 flex flex-col">
+      <Navbar />
+      <div className="flex justify-between item-center mb-6">
+        <h1 className={"text-lime-100 text-lg flex gap-x-1 items-center"}>
+          <span className="size-2 rounded-full bg-lime-400 animate-pulse"></span>
+          <span>({products?.length}) Products</span>
+        </h1>
+
+        {/* Search functionality */}
+        <SearchAnyThing
+          label={"product"}
+          searchTerm={searchTerm}
+          handleSearch={handleSearch}
+          setSearchTerm={setSearchTerm}
+        />
+
+        <Link to={"/create-product"} className={"hover:text-lime-400 "}>
+          <HiOutlinePlusCircle
+            size={32}
+            className="text-lime-400 hover:scale-105 transition-transform duration-200"
+          />
+        </Link>
+      </div>
+
+      {/*Product list*/}
+      <div className={"grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"}>
+        {products?.length === 0 ? (
+          <EmptySection
+            title={"No Products Found."}
+            description={"Hey, create products to get started."}
+          />
+        ) : (
+          products?.map((product) => (
+            <div
+              key={product.id}
+              className={
+                "flex box border border-neutral-600 flex-col justify-between gap-2 rounded-md p-4 bg-neutral-700"
+              }
+            >
+              <div>
+                <h1 className={"text-xl text-neutral-100 font-semibold"}>
+                  {product.title}
+                </h1>
+
+                <p className="text-neutral-400">{product.description}</p>
+              </div>
+
+              {/* Action Button */}
+              <div>
+                <hr className="text-neutral-500 pt-2" />
+                <div className={"flex gap-x-4 items-center justify-between"}>
+                  <p
+                    className={
+                      "text-xl font-medium text-neutral-300 mt-2 flex items-center gap-x-1"
+                    }
+                  >
+                    <HiOutlineCurrencyDollar
+                      size={24}
+                      strokeWidth={1.5}
+                      className="text-lime-200"
+                    />
+                    <span>{product.price}</span>
+                  </p>
+
+                  <div className="flex items-center gap-x-4">
+                    <Link
+                      to={`/edit-product/${product.id}`}
+                      className={`px-6 py-1.5 font-medium rounded-md bg-neutral-50 text-neutral-900 hover:scale-105 transition-transform duration-300 hover:font-semibold`}
+                    >
+                      Edit
+                    </Link>
+                    <button
+                      onClick={() => handleOpenProductDeleteModal(product?.id)}
+                      className={
+                        "px-6 py-1.5 font-medium rounded-md bg-red-500 text-red-100 hover:scale-105 transition-transform duration-300 hover:font-semibold"
+                      }
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
+          ))
+        )}
+      </div>
 
-            {/*Product list*/}
-            <div className={'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'}>
-                {
-                    products?.map((product) => (
-                        <div key={product.id} className={'flex flex-col gap-2 rounded-md p-4 bg-neutral-600'}>
-                            <h1 className={'text-2xl font-bold'}>{product.title}</h1>
-                            <p>{product.description}</p>
-                            <p className={'text-xl font-bold mt-2'}>{product.price}</p>
+      {/*Modal for deleting client action*/}
+      {isProductDeleteModalOpen && (
+        <Modal
+          setIsModalOpen={setIsProductDeleteModalOpen}
+          title={"Are you sure to delete product?"}
+          size={"small"}
+        >
+          <div className={"flex gap-x-6"}>
+            <button
+              onClick={() => setIsProductDeleteModalOpen(false)}
+              className="px-6 py-2 mt-4 rounded-md bg-neutral-900 text-center hover:bg-neutral-800 text-neutral-100"
+            >
+              Cancel
+            </button>
 
-                            <div className={'flex gap-x-4 items-center'}>
-                                <Link to={`/edit-product/${product.id}`} className={`px-6 py-1.5 font-medium rounded-md bg-lime-500 hover:bg-lime-800`}>Edit</Link>
-                                <button onClick={() => handleDeleteProduct(product?.id)} className={'px-6 py-1.5 font-medium rounded-md bg-rose-500 hover:bg-rose-800'}>Delete</button>
-                            </div>
-                        </div>
-                    ))
-                }
-            </div>
-        </div>
-    )
-}
+            <button
+              onClick={() => handleDeleteProduct(selectedId)}
+              className="px-6 py-2 mt-4 rounded-md bg-red-600 text-center hover:bg-red-800 text-neutral-100"
+            >
+              {deleteProductMutation.isPending ? "Deleting..." : "Delete"}
+            </button>
+          </div>
+        </Modal>
+      )}
+    </div>
+  );
+};
 
-export default ProductList
+export default ProductList;

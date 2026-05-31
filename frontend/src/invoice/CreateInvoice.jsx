@@ -1,7 +1,9 @@
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { useCreateInvoice } from '../hooks/useInvoiceApi'
-import { useGetClients } from '../hooks/useClientApi'
+import {useState} from "react"
+import {Link, useNavigate} from "react-router-dom"
+import {useCreateInvoice} from '../hooks/useInvoiceApi'
+import {useGetClients} from '../hooks/useClientApi'
+import {LuPlus} from "react-icons/lu";
+import toast from 'react-hot-toast'
 
 const CreateInvoice = () => {
     const [invoiceData, setInvoiceData] = useState({
@@ -18,30 +20,33 @@ const CreateInvoice = () => {
 
     const navigate = useNavigate()
     const createInvoiceMutation = useCreateInvoice()
-    const { data: clients } = useGetClients()
+
+    const {data: clients} = useGetClients()
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target
+        const {name, value} = e.target
 
         setInvoiceData((prev) => ({
             ...prev, [name]: value
         }))
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit =  (e) => {
         e.preventDefault()
 
-        const { clientId, issueDate, dueDate, ...data } = invoiceData
+        const {clientId, issueDate, dueDate, ...data} = invoiceData
         const isoIssueDate = new Date(issueDate).toISOString()
         const isoDueDate = new Date(dueDate).toISOString()
 
-        createInvoiceMutation.mutate({
+        if (clientId === undefined || clientId === null || clientId === '')
+            return toast.error('ClientId is required. Please select client.')
+
+         createInvoiceMutation.mutate({
             clientId,
-            body: { ...data, issueDate: isoIssueDate, dueDate: isoDueDate }
+            body: {...data, issueDate: isoIssueDate, dueDate: isoDueDate}
         }, {
             onSuccess: ({invoice}) => {
-                console.log({data})
-                navigate(`/invoice-detail/${invoice.id}`, { replace: true })
+                navigate(`/invoice-detail/${invoice.id}`)
             }
         })
     }
@@ -50,8 +55,8 @@ const CreateInvoice = () => {
         <div className="p-8">
             <h1 className="text-lime-500 font-bold text-xl mb-4 text-center">Create Invoice</h1>
 
-            <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mx-8 flex-wrap">
-                {/* <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-4 mx-8 flex-wrap"> */}
+            <form onSubmit={handleSubmit}
+                  className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mx-8 flex-wrap">
                 {/* Left Side*/}
                 <section className="flex flex-col gap-2 ">
                     {/* Clients */}
@@ -59,29 +64,42 @@ const CreateInvoice = () => {
                         <label htmlFor="clientId" className="font-semibold text-neutral-400">
                             Client
                         </label>
-                        <select
-                            name="clientId"
-                            value={invoiceData.clientId}
-                            onChange={handleInputChange}
-                            placeholder="payment method"
-                            className="w-full rounded-md p-2 border border-neutral-600 outline-none focus:border-lime-200 bg-neutral-800">
-                            {
-                                clients?.map((client) => (
-                                    <option key={client.id} value={client.id}>{client.name}</option>
+                        <div className={'flex gap-x-1 items-center'}>
+                            <select
+                                name="clientId"
+                                value={invoiceData.clientId ?? ''}
+                                onChange={handleInputChange}
+                                className="w-full rounded-md p-2 border border-neutral-600 outline-none focus:border-lime-200 bg-neutral-800">
+                                <option value={''}>Select client</option>
+                                {
+                                    clients?.map((client) => (
+                                        <option
+                                            key={client.id}
+                                            value={client.id}
+                                        >
+                                            {client.name}
+                                        </option>
 
-                                ))
-                            }
-                        </select>
+                                    ))
+                                }
+                            </select>
+                            {/*Create Client*/}
+                            <Link title={'create client'} to={'/create-client'}
+                                  className={'p-2 rounded-md border border-neutral-600'}>
+                                <LuPlus strokeWidth={2.5} size={26} className={'text-lime-400'}/>
+                            </Link>
+                        </div>
+
                     </div>
 
                     {/* Title Field */}
                     <div className="flex flex-col gap-2">
                         <label htmlFor="title" className="font-semibold text-neutral-400">Title</label>
                         <input type="text" name="title"
-                            value={invoiceData.title}
-                            onChange={handleInputChange}
-                            placeholder="Invoice title here..."
-                            className="w-full rounded-md p-2 border border-neutral-600 outline-none focus:border-lime-200"
+                               value={invoiceData.title}
+                               onChange={handleInputChange}
+                               placeholder="Invoice title here..."
+                               className="w-full rounded-md p-2 border border-neutral-600 outline-none focus:border-lime-200"
                         />
                     </div>
 
@@ -89,10 +107,10 @@ const CreateInvoice = () => {
                     <div className="flex flex-col gap-2">
                         <label htmlFor="issueDate" className="font-semibold text-neutral-400">Issue Date</label>
                         <input type="date" name="issueDate"
-                            value={invoiceData.issueDate}
-                            onChange={handleInputChange}
-                            placeholder="Issue date here..."
-                            className="w-full rounded-md p-2 border border-neutral-600 outline-none focus:border-lime-200"
+                               value={invoiceData.issueDate}
+                               onChange={handleInputChange}
+                               placeholder="Issue date here..."
+                               className="w-full rounded-md p-2 border border-neutral-600 outline-none focus:border-lime-200"
                         />
                     </div>
 
@@ -105,10 +123,10 @@ const CreateInvoice = () => {
                     <div className="flex flex-col gap-2">
                         <label htmlFor="currency" className="font-semibold text-neutral-400">Currency</label>
                         <input type="text" name="currency"
-                            value={invoiceData.currency}
-                            onChange={handleInputChange}
-                            placeholder="ETB"
-                            className="w-full rounded-md p-2 border border-neutral-600 outline-none focus:border-lime-200"
+                               value={invoiceData.currency}
+                               onChange={handleInputChange}
+                               placeholder="ETB"
+                               className="w-full rounded-md p-2 border border-neutral-600 outline-none focus:border-lime-200"
                         />
                     </div>
 
@@ -116,10 +134,10 @@ const CreateInvoice = () => {
                     <div className="flex flex-col gap-2">
                         <label htmlFor="dueDate" className="font-semibold text-neutral-400">Due Date</label>
                         <input type="date" name="dueDate"
-                            value={invoiceData.dueDate}
-                            onChange={handleInputChange}
-                            placeholder="Due date here..."
-                            className="w-full rounded-md p-2 border border-neutral-600 outline-none focus:border-lime-200 appearance-none"
+                               value={invoiceData.dueDate}
+                               onChange={handleInputChange}
+                               placeholder="Due date here..."
+                               className="w-full rounded-md p-2 border border-neutral-600 outline-none focus:border-lime-200 appearance-none"
                         />
                     </div>
                     {/* Notes Field */}
@@ -143,10 +161,10 @@ const CreateInvoice = () => {
                     <div className="flex flex-col gap-2">
                         <label htmlFor="taxRate" className="font-semibold text-neutral-400">Tax rate</label>
                         <input type="text" name="taxRate"
-                            value={invoiceData.taxRate}
-                            onChange={handleInputChange}
-                            placeholder="tax"
-                            className="w-full rounded-md p-2 border border-neutral-600 outline-none focus:border-lime-200"
+                               value={invoiceData.taxRate}
+                               onChange={handleInputChange}
+                               placeholder="tax"
+                               className="w-full rounded-md p-2 border border-neutral-600 outline-none focus:border-lime-200"
                         />
                     </div>
 
@@ -154,10 +172,10 @@ const CreateInvoice = () => {
                     <div className="flex flex-col gap-2">
                         <label htmlFor="discountRate" className="font-semibold text-neutral-400">Discount rate</label>
                         <input type="text" name="discountRate"
-                            value={invoiceData.discountRate}
-                            onChange={handleInputChange}
-                            placeholder="discount"
-                            className="w-full rounded-md p-2 border border-neutral-600 outline-none focus:border-lime-200"
+                               value={invoiceData.discountRate}
+                               onChange={handleInputChange}
+                               placeholder="discount"
+                               className="w-full rounded-md p-2 border border-neutral-600 outline-none focus:border-lime-200"
                         />
                     </div>
 
@@ -170,7 +188,7 @@ const CreateInvoice = () => {
                             name="paymentMethod"
                             value={invoiceData.paymentMethod}
                             onChange={handleInputChange}
-                            placeholder="payment method"
+                            aria-placeholder="payment method"
                             className="w-full rounded-md p-2 border border-neutral-600 outline-none focus:border-lime-200 bg-neutral-800">
                             <option value="bank">Bank</option>
                             <option value="cash">Cash</option>
@@ -179,7 +197,9 @@ const CreateInvoice = () => {
                     </div>
                 </section>
 
-                <button className="px-8 py-2 rounded-md bg-lime-500 text-neutral-900 font-bold">Submit</button>
+                <button className="px-8 py-2 rounded-md bg-lime-500 text-neutral-900 font-bold">
+                    {createInvoiceMutation.isPending ? "Processing..." : 'Submit'}
+                </button>
             </form>
         </div>
     )

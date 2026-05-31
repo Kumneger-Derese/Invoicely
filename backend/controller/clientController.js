@@ -1,6 +1,8 @@
 import { asyncHandler } from "../middleware/asyncHandler.js";
 import { prisma } from "../config/prisma.js";
 import { ApiError } from "../utils/apiError.js";
+import NotificationService from "../services/notificationService.js";
+
 
 //get one client
 const getClient = asyncHandler(async (req, res, next) => {
@@ -54,12 +56,20 @@ const createClient = asyncHandler(async (req, res, next) => {
     data: { name, email, phone, address, userId },
   });
 
-  //Todo: Send notification later
-
   if (!client) return next(new ApiError("Client not created.", 400));
 
-  res.status(201).send({
+  //Todo: Send notification later
+  const notification = await NotificationService.createNotification({
+    userId,
+    title: 'Client created',
+    message: `Client created for user ${user.username}.`,
+    type: 'success',
+    next
+  })
+
+  res.status(201).json({
     message: "Client created.",
+    notification
   });
 });
 
@@ -69,6 +79,8 @@ const updateClient = asyncHandler(async (req, res, next) => {
   const userId = req.user.id;
   const { clientId } = req.params;
   const { name, email, phone, address } = req.body;
+
+  const user = await prisma.user.findUnique({ where: { id: userId } })
 
   const client = await prisma.client.findUnique({
     where: { id: clientId, userId: userId },
@@ -88,8 +100,17 @@ const updateClient = asyncHandler(async (req, res, next) => {
 
   if (!updatedClient) return next(new ApiError("Client not updated.", 400));
 
+  const notification = await NotificationService.createNotification({
+    userId,
+    title: 'Client updated',
+    message: `Client updated by user ${user.username}.`,
+    type: 'warning',
+    next
+  })
+
   res.status(200).json({
     message: "Client updated.",
+    notification
   });
 });
 
@@ -97,6 +118,8 @@ const updateClient = asyncHandler(async (req, res, next) => {
 const deleteClient = asyncHandler(async (req, res, next) => {
   const userId = req.user.id;
   const { clientId } = req.params;
+
+  const user = await prisma.user.findUnique({ where: { id: userId } })
 
   const client = await prisma.client.findUnique({
     where: { id: clientId, userId: userId },
@@ -108,8 +131,17 @@ const deleteClient = asyncHandler(async (req, res, next) => {
     where: { id: clientId, userId: userId },
   });
 
+  const notification = await NotificationService.createNotification({
+    userId,
+    title: 'Client deleted',
+    message: `Client deleted by user ${user.username}.`,
+    type: 'warning',
+    next
+  })
+
   res.status(200).json({
     message: "Client deleted.",
+    notification
   });
 });
 

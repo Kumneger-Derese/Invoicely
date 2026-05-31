@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/set-state-in-effect */
-import { useEffect, useState } from "react"
-import { useGetClient, useUpdateClient } from '../hooks/useClientApi'
-import { useNavigate, useParams } from 'react-router-dom'
+import {useEffect, useState} from "react"
+import {useGetClient, useUpdateClient} from '../hooks/useClientApi'
+import {useNavigate, useParams} from 'react-router-dom'
 
 const EditClient = () => {
-    const { clientId } = useParams()
+    const {clientId} = useParams()
 
     const [clientData, setClientData] = useState({
         name: '',
@@ -20,7 +20,7 @@ const EditClient = () => {
     })
 
     const navigate = useNavigate()
-    const { data: client } = useGetClient(clientId)
+    const {data: client} = useGetClient(clientId)
     const updateClientMutation = useUpdateClient()
 
     useEffect(() => {
@@ -44,7 +44,7 @@ const EditClient = () => {
 
 
     const handleChange = (e) => {
-        const { name, value } = e.target
+        const {name, value} = e.target
 
         setClientData((prev) => ({
             ...prev, [name]: value
@@ -53,7 +53,7 @@ const EditClient = () => {
 
 
     const handleAddressChange = (e) => {
-        const { name, value } = e.target
+        const {name, value} = e.target
 
         setClientAddress((prev) => ({
             ...prev, [name]: value
@@ -63,15 +63,11 @@ const EditClient = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        const body = { ...clientData, address: clientAddress }
+        const body = {...clientData, address: clientAddress}
 
-        updateClientMutation.mutate({ clientId, body }, {
-            onSuccess: () => {
-                navigate('/clients', { replace: true })
-            }
-        })
+        updateClientMutation.mutate({clientId, body})
+        navigate('/clients')
     }
-
 
 
     return (
@@ -111,7 +107,7 @@ const EditClient = () => {
 
                     {/* Phone Field */}
                     <div className="flex flex-col w-full gap-1">
-                        <label htmlFor="email" className="text-neutral-300 font-semibold">Client Email</label>
+                        <label htmlFor="email" className="text-neutral-300 font-semibold">Client Phone</label>
                         <input
                             type="phone"
                             name="phone"
@@ -122,7 +118,8 @@ const EditClient = () => {
                         />
                     </div>
 
-                    <button className="font-semibold text-neutral-900 bg-lime-500 rounded-md w-full p-3 mt-5">Update</button>
+                    <button className="font-semibold text-neutral-900 bg-lime-500 rounded-md w-full p-3 mt-5">Update
+                    </button>
                 </div>
 
                 {/*Right Section */}

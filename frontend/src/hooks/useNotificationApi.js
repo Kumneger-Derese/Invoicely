@@ -2,8 +2,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   deleteNotification,
   deleteNotifications,
-  getNotifications,
-  getNotificationsCount,
+  fetchNotifications,
+  fetchNotificationsCount,
   readNotification,
   readNotifications,
 } from "../api/notificationApi";
@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 const useGetNotifications = () => {
   return useQuery({
     queryKey: ["notifications"],
-    queryFn: getNotifications,
+    queryFn: fetchNotifications,
   });
 };
 
@@ -21,27 +21,27 @@ const useGetNotifications = () => {
 const useGetNotificationsCount = () => {
   return useQuery({
     queryKey: ["notifications"],
-    queryFn: getNotificationsCount,
+    queryFn: fetchNotificationsCount,
   });
 };
 
 //read single notification
-const useReadNotification = (notificationId) => {
+const useReadNotification = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: readNotification,
-    onSuccess: (data) => {
+
+    onSuccess: (data, variables) => {
       toast.success(data.message);
-      queryClient.invalidateQueries({ queryKey: ["notifications"] });
       queryClient.invalidateQueries({
-        queryKey: ["notifications", notificationId],
+        queryKey: ["notifications", variables.notificationId],
       });
     },
+
     onError: (error) => {
       const message = error?.response?.data?.message;
       toast.error(message);
-      console.log({ error });
     },
   });
 };
@@ -52,35 +52,38 @@ const useReadNotifications = () => {
 
   return useMutation({
     mutationFn: readNotifications,
+
     onSuccess: (data) => {
       toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
+
     onError: (error) => {
       const message = error?.response?.data?.message;
       toast.error(message);
-      console.log({ error });
     },
   });
 };
 
 //delete single notification
-const useDeleteNotification = (notificationId) => {
+const useDeleteNotification = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: deleteNotification,
-    onSuccess: (data) => {
+
+    onSuccess: (data, variables) => {
+      console.log("useDeleteNotification", variables);
+
       toast.success(data.message);
-      queryClient.invalidateQueries({ queryKey: ["notifications"] });
       queryClient.invalidateQueries({
-        queryKey: ["notifications", notificationId],
+        queryKey: ["notifications", variables.notificationId],
       });
     },
+
     onError: (error) => {
       const message = error?.response?.data?.message;
       toast.error(message);
-      console.log({ error });
     },
   });
 };
@@ -91,14 +94,15 @@ const useDeleteNotifications = () => {
 
   return useMutation({
     mutationFn: deleteNotifications,
+
     onSuccess: (data) => {
       toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
+
     onError: (error) => {
       const message = error?.response?.data?.message;
       toast.error(message);
-      console.log({ error });
     },
   });
 };

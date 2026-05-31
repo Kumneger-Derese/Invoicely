@@ -61,7 +61,7 @@ const EditInvoice = () => {
       body: { ...data, issueDate: isoIssueDate, dueDate: isoDueDate }
     }, {
       onSuccess: () => {
-        navigate('/invoices', { replace: true })
+        navigate(`/invoice-detail/${invoiceId}`)
       }
     })
   }
@@ -148,7 +148,7 @@ const EditInvoice = () => {
               name="notes"
               value={invoiceData.notes}
               onChange={handleInputChange}
-              rows={1}
+              rows={3}
               placeholder="Notes here..."
               className="w-full rounded-md p-2 border border-neutral-600 outline-none focus:border-lime-200"
             />
@@ -161,7 +161,7 @@ const EditInvoice = () => {
           {/* Tax Rate Field */}
           <div className="flex flex-col gap-2">
             <label htmlFor="taxRate" className="font-semibold text-neutral-400">Tax rate</label>
-            <input type="text" name="taxRate"
+            <input type="number" name="taxRate"
               value={invoiceData.taxRate}
               onChange={handleInputChange}
               placeholder="tax"
@@ -172,7 +172,7 @@ const EditInvoice = () => {
           {/* Discount Field */}
           <div className="flex flex-col gap-2">
             <label htmlFor="discountRate" className="font-semibold text-neutral-400">Discount rate</label>
-            <input type="text" name="discountRate"
+            <input type="number" name="discountRate"
               value={invoiceData.discountRate}
               onChange={handleInputChange}
               placeholder="discount"
@@ -200,7 +200,7 @@ const EditInvoice = () => {
 
         <button
           className="px-8 py-2 rounded-md bg-lime-500 text-neutral-900 font-bold">
-          {updateInvoiceMutation.isPending ? 'Processing' : 'Submit'}
+          {updateInvoiceMutation.isPending ? 'Processing...' : 'Submit'}
         </button>
       </form>
     </div>

@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
-import { useRegisterUser } from '../hooks/useUserApi'
-import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../store/useAuthStore'
+import {useEffect, useState} from 'react'
+import {useRegisterUser} from '../hooks/useUserApi'
+import {Link, useNavigate} from 'react-router-dom'
+import {useAuth} from '../store/useAuthStore'
 
 export default function RegisterPage() {
   const [userData, setUserData] = useState({
@@ -18,7 +18,7 @@ export default function RegisterPage() {
     if (userInfo) {
       navigate('/invoices')
     } else {
-      navigate('/login')
+      navigate('/register')
     }
 
   }, [userInfo, navigate])
@@ -36,14 +36,10 @@ export default function RegisterPage() {
     registerMutation.mutate(body, {
       onSuccess: () => {
         navigate('/invoices')
-      }
-    })
 
-    // Reset form
-    setUserData({
-      email: '',
-      password: '',
-      username: ''
+        // Reset form
+        setUserData({ email: '', password: '', username: ''})
+      }
     })
   }
 
@@ -109,7 +105,7 @@ export default function RegisterPage() {
           </div>
 
           <button className='py-2.5 rounded-xl font-semibold w-fit px-8 mt-4 bg-lime-600 hover:bg-lime-800'>
-            Sign up
+            {registerMutation.isPending ? "Processing..." : "Sign up"}
           </button>
 
           <div className='flex gap-x-2'>

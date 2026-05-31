@@ -7,7 +7,11 @@
     "start": "node server.js",
     "dev": "nodemon server.js"
   },
-  "keywords": ["prisma", "pern","invoicely"],
+  "keywords": [
+    "prisma",
+    "pern",
+    "invoicely"
+  ],
   "author": "Kumneger Derese",
   "license": "ISC",
   "type": "module",
@@ -21,6 +25,7 @@
     "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
+    "baseline-browser-mapping": "^2.10.0",
     "nodemon": "^3.1.10",
     "prisma": "^6.18.0"
   }

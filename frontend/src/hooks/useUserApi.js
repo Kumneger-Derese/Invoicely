@@ -70,7 +70,6 @@ const useUpdateProfile = () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
     },
     onError: (error) => {
-      console.log({ error });
       const message = error?.response?.data?.message;
       toast.error(message);
     },

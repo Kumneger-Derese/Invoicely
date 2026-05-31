@@ -2,14 +2,33 @@
 
 @font-face {
   font-family: Poppins;
-  src: url('./assets//fonts/poppins.ttf');
+  src: url('./assets/fonts/poppins.ttf');
 }
 
 @theme {
   --font-poppins : Poppins
 }
 
-body,
-html {
+body, html {
   @apply bg-neutral-800 text-neutral-50 font-poppins;
+}
+
+html{
+  scrollbar-color: #525252 #262626;
+}
+
+html::-webkit-scrollbar {
+  color: #262626;
+}
+
+html::-webkit-scrollbar-thumb {
+  background: #525252;
+}
+
+.box {
+corner-shape: round scoop;
+}
+
+.box-navbar{
+  corner-shape: round scoop;
 }

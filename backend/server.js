@@ -8,7 +8,7 @@ import {
   errorHandler,
   notFound,
 } from "./middleware/errorHandler.js";
-import {itemsRouter} from "./routes/itemRoute.js";
+import { itemsRouter } from "./routes/itemRoute.js";
 import { clientRouter } from "./routes/clientRoute.js";
 import { invoiceRouter } from "./routes/invoiceRoute.js";
 import { productRouter } from "./routes/productRoute.js";

@@ -40,14 +40,11 @@ const CreateClient = () => {
         e.preventDefault()
 
         const data = { ...clientData, address: clientAddress }
-        createClientMutation.mutate(data, {
+        createClientMutation.mutate(data,{
             onSuccess: () => {
                 navigate('/clients', { replace: true })
-            }
-        })
+        }})
     }
-
-
 
     return (
         <div className="px-8 py-4 flex flex-col gap-8">
@@ -86,7 +83,7 @@ const CreateClient = () => {
 
                     {/* Phone Field */}
                     <div className="flex flex-col w-full gap-1">
-                        <label htmlFor="email" className="text-neutral-300 font-semibold">Client Email</label>
+                        <label htmlFor="email" className="text-neutral-300 font-semibold">Client Phone</label>
                         <input
                             type="phone"
                             name="phone"
@@ -154,6 +151,8 @@ const CreateClient = () => {
 
 
             </form>
+
+
         </div>
     )
 }

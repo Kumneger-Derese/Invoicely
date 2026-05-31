@@ -1,22 +1,35 @@
-import { asyncHandler } from "../middleware/asyncHandler.js";
 import { prisma } from "../config/prisma.js";
 import { ApiError } from "../utils/apiError.js";
+import { asyncHandler } from "../middleware/asyncHandler.js";
 
-// notification count
-const getNotificationsCount = asyncHandler(async (req, res, next) => {
+// get all notifications
+const getNotifications = asyncHandler(async (req, res, next) => {
   const userId = req.user.id;
-  const count = await prisma.notification.count({
-    where: { read: false, userId },
+
+  const notifications = await prisma.notification.findMany({
+    where: { userId },
+    orderBy: { createdAt: "desc" },
   });
 
-  if (!count) return [];
+  if (!notifications) {
+    return res.status(200).json([]);
+  }
 
-  console.log({ count });
-
-  res.status(200).json(count);
+  res.status(200).json(notifications);
 });
 
-// read notification
+// Get notifications count in number.
+const getNotificationsCount = asyncHandler(async (req, res, next) => {
+  const userId = req.user.id;
+
+  const count = await prisma.notification.findMany({
+    where: { userId, read: false },
+  });
+
+  return res.status(200).json(count.length);
+});
+
+// Read one notification
 const readNotification = asyncHandler(async (req, res, next) => {
   const userId = req.user.id;
   const { notificationId } = req.params;
@@ -28,52 +41,35 @@ const readNotification = asyncHandler(async (req, res, next) => {
   if (!notification)
     return next(new ApiError("Notification to read not found", 404));
 
-  await prisma.notification.update({
+  const notificationUpdate = await prisma.notification.update({
     where: { id: notificationId, userId },
     data: { read: true },
   });
+
+  console.log("notificationUpdate:", notificationUpdate);
 
   res.status(200).json({
     message: "Notification viewed.",
   });
 });
 
-// read all notifications
+//✅ read all notifications
 const readNotifications = asyncHandler(async (req, res, next) => {
   const userId = req.user.id;
 
-  const notificationCount = await prisma.notification.updateMany({
+  const notifications = await prisma.notification.updateMany({
     where: { userId },
     data: { read: true },
   });
 
+  const count = notifications.count;
+
   res.status(200).json({
-    message: "Notifications viewed.",
-    count: notificationCount.count,
+    message: `All notifications read (${count}).`,
   });
 });
 
-// get all notifications
-const getNotifications = asyncHandler(async (req, res, next) => {
-  const userId = req.user.id;
-
-  const notifications = await prisma.notification.findMany({
-    where: { userId },
-    include: {
-      user: {
-        select: { id: true, username: true, email: true },
-      },
-    },
-  });
-
-  if (!notifications) return [];
-
-  const unreadCount = notifications.filter((n) => n.read === true).length;
-
-  res.status(200).json({ notifications, unreadCount });
-});
-
-// delete notification
+//delete notification
 const deleteNotification = asyncHandler(async (req, res, next) => {
   const userId = req.user.id;
   const { notificationId } = req.params;
@@ -92,7 +88,7 @@ const deleteNotification = asyncHandler(async (req, res, next) => {
   res.status(200).json({ message: "Notification deleted.", delNotification });
 });
 
-// delete all notifications
+//✅ delete all notifications
 const deleteNotifications = asyncHandler(async (req, res, next) => {
   const userId = req.user.id;
 
